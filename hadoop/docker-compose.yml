@@ -1,0 +1,81 @@
+version: '3'
+services:
+  # HDFS - NameNode
+  namenode:
+    image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
+    container_name: namenode
+    ports:
+      - "9870:9870"   # Web UI for NameNode
+      - "9000:9000"   # RPC for HDFS
+    environment:
+      - CLUSTER_NAME=hadoop-cluster
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+      - HDFS_CONF_dfs_replication=3  # replication factor
+    volumes:
+      - /mnt/namenode:/hadoop/dfs/name  # SMB share for NameNode
+    networks:
+      - hadoop
+
+  # HDFS - DataNodes (3 separate containers, each with its own SMB share)
+  datanode1:
+    image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
+    container_name: datanode1
+    environment:
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+      - HDFS_CONF_dfs_replication=3  # replication factor
+    volumes:
+      - /mnt/datanode1:/hadoop/dfs/data  # SMB share for DataNode 1
+    networks:
+      - hadoop
+
+  datanode2:
+    image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
+    container_name: datanode2
+    environment:
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+      - HDFS_CONF_dfs_replication=3  # replication factor
+    volumes:
+      - /mnt/datanode2:/hadoop/dfs/data  # SMB share for DataNode 2
+    networks:
+      - hadoop
+
+  datanode3:
+    image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
+    container_name: datanode3
+    environment:
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+      - HDFS_CONF_dfs_replication=3  # replication factor
+    volumes:
+      - /mnt/datanode3:/hadoop/dfs/data  # SMB share for DataNode 3
+    networks:
+      - hadoop
+
+  # YARN - Resource Manager
+  resourcemanager:
+    image: bde2020/hadoop-resourcemanager:2.0.0-hadoop3.2.1-java8
+    container_name: resourcemanager
+    ports:
+      - "8088:8088"  # Web UI for YARN Resource Manager
+    environment:
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+    networks:
+      - hadoop
+
+  # YARN - Node Managers (2 separate containers)
+  nodemanager1:
+    image: bde2020/hadoop-nodemanager:2.0.0-hadoop3.2.1-java8
+    container_name: nodemanager1
+    environment:
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+    networks:
+      - hadoop
+
+  nodemanager2:
+    image: bde2020/hadoop-nodemanager:2.0.0-hadoop3.2.1-java8
+    container_name: nodemanager2
+    environment:
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+    networks:
+      - hadoop
+
+# Define shared volumes for persistent data from SMB shares
