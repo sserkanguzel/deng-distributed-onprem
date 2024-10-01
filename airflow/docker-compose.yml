@@ -198,5 +198,18 @@ services:
       - -c
       - airflow
 
+  git-sync:
+    image: k8s.gcr.io/git-sync/git-sync:v3.3.1
+    environment:
+      GIT_SYNC_REPO: https://github.com/sserkanguzel/deng-distributed-onprem.git
+      GIT_SYNC_BRANCH: main
+      GIT_SYNC_DEST: /var/lib/airflow/dags
+      GIT_SYNC_SUBPATH: /airflow/dags
+      GIT_SYNC_ONE_TIME: "false"
+      GIT_SYNC_WAIT: "30"
+    volumes:
+      - /var/lib/airflow/dags:/var/lib/airflow/dags
+    restart: always
+
 volumes:
   postgres-db-volume:
