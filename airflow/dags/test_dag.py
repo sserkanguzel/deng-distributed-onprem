@@ -9,7 +9,7 @@ default_args = {
 }
 
 with DAG(
-    dag_id='hello_world_dag11',
+    dag_id='hello_world_dag',
     default_args=default_args,
     schedule_interval='@daily',  # Runs daily
     catchup=False,  # Do not backfill
