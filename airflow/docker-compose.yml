@@ -288,7 +288,7 @@ services:
     volumes:
       - ${AIRFLOW_PROJ_DIR:-.}/dags:${DESTINATION_PATH:-/app/sync}
     environment:
-      REPO_URL: ${REPO_URL:-https://github.com/sserkanguzel/deng-distributed-onprem.git}
+      REPO_URL: ${REPO_URL:-https://github.com/sserkanguzel/deng-onprem-batch.git}
       GIT_BRANCH: ${GIT_BRANCH:-main}
       DIRECTORY_NAME: ${DIRECTORY_NAME:-project}
       DESTINATION_PATH: ${DESTINATION_PATH:-/app/sync}
